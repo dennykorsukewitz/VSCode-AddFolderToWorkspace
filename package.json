@@ -1,0 +1,98 @@
+{
+  "name": "AddFolderToWorkspace",
+  "displayName": "Add Folder To Workspace",
+  "description": "This extension adds the selected folder to the workspace (VSC Workspace).",
+  "version": "1.0.0",
+  "publisher": "dennykorsukewitz",
+  "icon": "doc/images/icon.png TODO",
+  "license": "SEE LICENSE IN LICENSE",
+  "homepage": "https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/blob/dev/README.md",
+  "pricing": "Free",
+  "bugs": {
+    "url": "https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/issues",
+    "email": "dennykorsukewitz@gmail.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace"
+  },
+  "sponsor": {
+    "url": "https://github.com/sponsors/dennykorsukewitz"
+  },
+  "keywords": [
+    "Workspace",
+    "workflow"
+  ],
+  "categories": [
+    "Snippets"
+  ],
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "activationEvents": [
+    "onCommand:addFolderToWorkspace"
+  ],
+  "main": "./src/extension",
+  "scripts": {
+    "lint": "eslint .",
+    "lint-fix": "eslint . --fix",
+    "test": "node ./test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "glob": "^8.1.0",
+    "node-fetch": "^2.6.9",
+    "path": "^0.12.7",
+    "vscode-uri": "^3.0.7",
+    "xmldom": "^0.6.0",
+    "xpath": "^0.0.32"
+  },
+  "vsce": {
+    "dependencies": true
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "addFolderToWorkspace",
+        "title": "Add Folder to Workspace.",
+        "category": "AddFolderToWorkspace"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "addFolderToWorkspace",
+        "key": "ctrl+alt+z p"
+      },
+      {
+        "command": "workbench.action.openSettings",
+        "key": "ctrl+alt+z z"
+      },
+      {
+        "command": "workbench.action.addRootFolder",
+        "key": "ctrl+alt+z w"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "AddFolderToWorkspace",
+      "properties": {
+        "addFolderToWorkspace.workspaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Provides a searchable list of folders (Workspaces) that can be added to the current VSC Workspace.",
+          "default": []
+        }
+      }
+    }
+  }
+}

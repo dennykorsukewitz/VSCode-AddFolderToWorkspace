@@ -1,0 +1,16 @@
+---
+name: GitHub Pages
+
+on:
+  release:
+    types:
+      - published
+  push:
+    branches: ["dev", "dev-update"]
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  Pages:
+    uses: dennykorsukewitz/dennykorsukewitz/.github/workflows/reusable.pages.yml@dev
+    secrets:
+      PAT: ${{ secrets.PAT }}

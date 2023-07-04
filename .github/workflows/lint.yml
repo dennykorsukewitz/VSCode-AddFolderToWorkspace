@@ -1,0 +1,11 @@
+---
+name: Lint
+on:
+  push:
+    # branches: ["NEVER"]
+  pull_request:
+  workflow_dispatch: # Allows you to run this workflow manually from the Actions tab
+
+jobs:
+  Lint:
+    uses: dennykorsukewitz/dennykorsukewitz/.github/workflows/reusable.lint.yml@dev
