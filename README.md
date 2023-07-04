@@ -22,7 +22,7 @@ This Function provides a searchable list of folders (Workspaces) that can be add
 **Shortcut:** ```strg + alt + d, p```<br>
 **Command:**  ```AddFolderToWorkspace: Add Folder to Workspace.```
 
-#### Settings
+### Settings
 
 `Preferences -> Settings -> Extensions -> AddFolderToWorkspace`
 
