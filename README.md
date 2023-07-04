@@ -2,7 +2,8 @@
 
 # AddFolderToWorkspace
 
-**AddFolderToWorkspace** is an extension that adds the selected folder to the workspace (VSC Workspace).
+**AddFolderToWorkspace** is an extension that adds the selected folder to the workspace (VSC Workspace). \
+Of course, you can use the already built-in function (`workbench.action.addRootFolder`). But then you have to click through all the folders again and again.
 
 | Repository | GitHub | Visual Studio Marketplace |
 | ------ | ------ | ------ |
@@ -13,7 +14,7 @@
 
 | Status |
  | ------ |
-| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/1.1.1/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/1.1.1...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) [![Snippet](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/snippet.yml/badge.svg)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/snippet.yml) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
+| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/1.0.0/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/1.0.0...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
 
 ## Feature
 
@@ -28,7 +29,7 @@ This Function provides a searchable list of folders (Workspaces) that can be add
 
 | Name | Description | Default Value |
 | - | - | - |
-| addFolderToWorkspace.workspaces | All searchable Workspaces. | /workspace/ |
+| addFolderToWorkspace.workspaces | All searchable Workspaces. | /Users/ |
 
 ![AddFolderToWorkspace](doc/images/addfoldertoworkspace.gif)
 
