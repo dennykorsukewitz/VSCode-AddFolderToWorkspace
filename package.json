@@ -4,7 +4,7 @@
   "description": "This extension adds the selected folder to the workspace (VSC Workspace).",
   "version": "1.0.0",
   "publisher": "dennykorsukewitz",
-  "icon": "doc/images/icon.png TODO",
+  "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
   "homepage": "https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/blob/dev/README.md",
   "pricing": "Free",
@@ -49,11 +49,7 @@
   },
   "dependencies": {
     "glob": "^8.1.0",
-    "node-fetch": "^2.6.9",
-    "path": "^0.12.7",
-    "vscode-uri": "^3.0.7",
-    "xmldom": "^0.6.0",
-    "xpath": "^0.0.32"
+    "path": "^0.12.7"
   },
   "vsce": {
     "dependencies": true
@@ -69,20 +65,16 @@
     "keybindings": [
       {
         "command": "addFolderToWorkspace",
-        "key": "ctrl+alt+z p"
-      },
-      {
-        "command": "workbench.action.openSettings",
-        "key": "ctrl+alt+z z"
+        "key": "ctrl+alt+d p"
       },
       {
         "command": "workbench.action.addRootFolder",
-        "key": "ctrl+alt+z w"
+        "key": "ctrl+alt+d w"
       }
     ],
     "configuration": {
       "type": "object",
-      "title": "AddFolderToWorkspace",
+      "title": "Add Folder To Workspace",
       "properties": {
         "addFolderToWorkspace.workspaces": {
           "type": "array",
@@ -90,7 +82,9 @@
             "type": "string"
           },
           "description": "Provides a searchable list of folders (Workspaces) that can be added to the current VSC Workspace.",
-          "default": []
+          "default": [
+            "/Users/"
+          ]
         }
       }
     }

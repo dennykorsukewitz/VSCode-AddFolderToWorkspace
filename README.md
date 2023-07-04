@@ -19,7 +19,7 @@
 
 This Function provides a searchable list of folders (Workspaces) that can be added to the current VSC Workspace. All configured folders will be displayed.
 
-**Shortcut:** ```strg + alt + z, p```<br>
+**Shortcut:** ```strg + alt + d, p```<br>
 **Command:**  ```AddFolderToWorkspace: Add Folder to Workspace.```
 
 #### Settings
