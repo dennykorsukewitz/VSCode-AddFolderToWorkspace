@@ -49,7 +49,7 @@ function initAddFolderToWorkspace(context) {
 
         // Open QuickPick and add selected Folder (Directory to VSC Workspace).
         vscode.window.showQuickPick(workspaceDirectories, {
-            placeHolder: 'AddFolderToWorkspace: Add Folder to Workspace.',
+            placeHolder: 'AddFolderToWorkspace: Select a folder...',
         }).then((Selected) => {
             if (!Selected) return;
 

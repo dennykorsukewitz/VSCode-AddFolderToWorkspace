@@ -2,7 +2,7 @@
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
   "description": "This extension adds the selected folder to the workspace (VSC Workspace).",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -65,11 +65,11 @@
     "keybindings": [
       {
         "command": "addFolderToWorkspace",
-        "key": "ctrl+alt+d p"
+        "key": "ctrl+alt+k p"
       },
       {
         "command": "workbench.action.addRootFolder",
-        "key": "ctrl+alt+d w"
+        "key": "ctrl+alt+k w"
       }
     ],
     "configuration": {

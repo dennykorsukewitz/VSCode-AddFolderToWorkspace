@@ -2,6 +2,14 @@
 
 All notable changes to the "AddFolderToWorkspace" extension will be documented in this file.
 
+## [1.0.1]
+
+### Small Improvements
+
+- Updated README.md
+- Changed Shortcut to ```strg + alt + k, p```
+- Added Screenshots
+
 ## [1.0.0]
 
 ### Initial release of AddFolderToWorkspace extension
