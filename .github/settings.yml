@@ -9,7 +9,7 @@ repository:
   homepage: https://dennykorsukewitz.github.io/VSCode-AddFolderToWorkspace/
 
   # A comma-separated list of topics to set on the repository
-  topics: extension, VisualStudioCode, VSC, Workspace, Workflow
+  topics: pages, extension, VisualStudioCode, VSC, Workspace, Workflow
 
   # Either `true` to make the repository private, or `false` to make it public.
   private: false
