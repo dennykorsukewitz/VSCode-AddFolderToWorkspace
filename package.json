@@ -2,7 +2,7 @@
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
   "description": "This extension adds the selected folder to the workspace (VSC Workspace).",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -20,11 +20,13 @@
     "url": "https://github.com/sponsors/dennykorsukewitz"
   },
   "keywords": [
-    "Workspace",
-    "workflow"
+    "add",
+    "folder",
+    "workflow",
+    "workspace"
   ],
   "categories": [
-    "Snippets"
+    "Other"
   ],
   "engines": {
     "vscode": "^1.74.0"
