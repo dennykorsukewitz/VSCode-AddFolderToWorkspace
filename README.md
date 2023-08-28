@@ -4,9 +4,11 @@
 
 **AddFolderToWorkspace** is an extension that adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).
 
+```markdown
     Of course, you can use the already built-in function:
     `Workspaces: Add Folder To Workspace...` (workbench.action.addRootFolder).
     But then you have to click through all the folders again and again.
+```
 
 | Repository | GitHub | Visual Studio Marketplace |
 | ------ | ------ | ------ |
