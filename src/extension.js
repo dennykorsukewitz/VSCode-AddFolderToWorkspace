@@ -68,6 +68,8 @@ function initAddFolderToWorkspace(context) {
             workspaceURIs.push({ uri: URI });
         }
 
+        if (!workspaceURIs.length) return;
+
         // Add selected Folder to Workspace.
         await updateWorkspaceAndWait(0, null, workspaceURIs);
 
