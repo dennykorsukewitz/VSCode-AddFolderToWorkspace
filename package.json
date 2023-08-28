@@ -1,8 +1,8 @@
 {
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
-  "description": "This extension adds the selected folder to the workspace (VSC Workspace).",
-  "version": "1.0.2",
+  "description": "This extension adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).",
+  "version": "1.1.0",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -32,7 +32,8 @@
     "vscode": "^1.74.0"
   },
   "activationEvents": [
-    "onCommand:addFolderToWorkspace"
+    "onCommand:addFolderToWorkspace",
+    "onCommand:removeFolderFromWorkspace"
   ],
   "main": "./src/extension",
   "scripts": {
@@ -62,12 +63,21 @@
         "command": "addFolderToWorkspace",
         "title": "Add Folder to Workspace.",
         "category": "AddFolderToWorkspace"
+      },
+      {
+        "command": "removeFolderFromWorkspace",
+        "title": "Remove Folder from Workspace.",
+        "category": "AddFolderToWorkspace"
       }
     ],
     "keybindings": [
       {
         "command": "addFolderToWorkspace",
         "key": "ctrl+alt+k p"
+      },
+      {
+        "command": "removeFolderFromWorkspace",
+        "key": "ctrl+alt+k shift+p"
       },
       {
         "command": "workbench.action.addRootFolder",
