@@ -24,7 +24,11 @@ function initAddFolderToWorkspace(context) {
     const addFolderToWorkspaceId = 'addFolderToWorkspace';
     context.subscriptions.push(vscode.commands.registerCommand(addFolderToWorkspaceId, async () => {
 
-        let workspaceDirectories = [];
+        let workspaceDirectories = [],
+            newWorkspaceFound     = 0,
+            manualWorkspace       = '',
+            manualDirectoryString = '-- Add manually a directory --';
+
         let config = vscode.workspace.getConfiguration('addFolderToWorkspace');
 
         // Check if workspaces are defined.
@@ -50,25 +54,74 @@ function initAddFolderToWorkspace(context) {
             return;
         }
 
+        if (workspaceDirectories.length && !workspaceDirectories.includes(manualDirectoryString)) {
+            workspaceDirectories.unshift(manualDirectoryString);
+        }
+
         // Open QuickPick and add selected Folder (Directory to VSC Workspace).
         let workspaces = await vscode.window.showQuickPick(workspaceDirectories, {
             title: 'AddFolderToWorkspace',
             placeHolder: 'AddFolderToWorkspace: Select a folder...',
             canPickMany: true,
         })
+        if (!workspaces) return;
 
+        if (workspaces.length && workspaces.includes(manualDirectoryString)) {
+
+            workspaces.shift(manualDirectoryString);
+            newWorkspaceFound = 1;
+
+            manualWorkspace = await vscode.window.showInputBox({
+                title: 'AddFolderToWorkspace',
+                placeHolder: 'AddFolderToWorkspace: Add manually a directory...',
+            });
+
+            if (manualWorkspace){
+                workspaces.push(manualWorkspace);
+            }
+        }
         if (!workspaces) return;
 
         let workspaceURIs = [];
         for await (const workspace of workspaces) {
 
             // Get URI of selected directory.
-            let URI = vscode.Uri.file(workspace);
+            let URI = vscode.Uri.file(workspace),
+                URIexists = 0;
+
             if (!URI) return;
-            workspaceURIs.push({ uri: URI });
+
+            vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
+
+                if (URI.path == workspaceFolder.uri.path){
+                    URIexists = 1;
+                }
+            })
+
+            if (!URIexists){
+                workspaceURIs.push({ uri: URI });
+            }
         }
 
         if (!workspaceURIs.length) return;
+
+        if (newWorkspaceFound) {
+            let addNewWorkspaceToConfig = await vscode.window.showQuickPick(['yes','no'], {
+                title: 'AddFolderToWorkspace (New Workspace)',
+                placeHolder: 'AddFolderToWorkspace: Should I save the new workspace in the settings?',
+                canPickMany: false,
+            });
+
+            if (addNewWorkspaceToConfig == 'yes'){
+
+                if (!manualWorkspace.endsWith("/")){
+                    manualWorkspace += '/';
+                }
+
+                config.workspaces.push(manualWorkspace);
+                await vscode.workspace.getConfiguration().update('addFolderToWorkspace.workspaces', config.workspaces);
+            }
+        }
 
         // Add selected Folder to Workspace.
         await updateWorkspaceAndWait(0, null, workspaceURIs);
