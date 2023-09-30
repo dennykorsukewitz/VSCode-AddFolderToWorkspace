@@ -2,6 +2,13 @@
 
 All notable changes to the "AddFolderToWorkspace" extension will be documented in this file.
 
+## [1.1.2]
+
+### Maintenance
+
+- Added additional check if vscode.workspace.workspaceFolders exists.
+- Saves the new manually entered directory globally.
+
 ## [1.1.1]
 
 `AddFolderToWorkspace: Add manually a directory...` - Paths can be added manually from now on. After that, the new workspace can be saved directly in the settings.

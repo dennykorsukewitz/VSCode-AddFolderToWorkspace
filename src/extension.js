@@ -91,12 +91,14 @@ function initAddFolderToWorkspace(context) {
 
             if (!URI) return;
 
-            vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
+            if (vscode.workspace.workspaceFolders){
+                vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
 
-                if (URI.path == workspaceFolder.uri.path){
-                    URIexists = 1;
-                }
-            })
+                    if (URI.path == workspaceFolder.uri.path){
+                        URIexists = 1;
+                    }
+                })
+            }
 
             if (!URIexists){
                 workspaceURIs.push({ uri: URI });
@@ -117,9 +119,10 @@ function initAddFolderToWorkspace(context) {
                 if (!manualWorkspace.endsWith("/")){
                     manualWorkspace += '/';
                 }
+                let configWorkspaces = config.workspaces;
+                configWorkspaces.push(manualWorkspace);
 
-                config.workspaces.push(manualWorkspace);
-                await vscode.workspace.getConfiguration().update('addFolderToWorkspace.workspaces', config.workspaces);
+                await vscode.workspace.getConfiguration().update('addFolderToWorkspace.workspaces', configWorkspaces, true);
             }
         }
 
