@@ -2,7 +2,7 @@
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
   "description": "This extension adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).",
-  "version": "1.1.1",
+  "version": "1.2.1",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -93,7 +93,17 @@
           "items": {
             "type": "string"
           },
-          "description": "Provides a searchable list of folders (Workspaces) that can be added to the current VSC Workspace.",
+          "description": "Provides a list of folders (Workspaces) that can be added to the current VSC Workspace.",
+          "default": [
+            "/Users/"
+          ]
+        },
+        "addFolderToWorkspace.recursiveWorkspaces": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Provides a searchable (only first level) list of folders  (Workspaces) that can be added to the current VSC Workspace.",
           "default": [
             "/Users/"
           ]

@@ -25,21 +25,24 @@ function initAddFolderToWorkspace(context) {
     context.subscriptions.push(vscode.commands.registerCommand(addFolderToWorkspaceId, async () => {
 
         let workspaceDirectories = [],
-            newWorkspaceFound     = 0,
-            manualWorkspace       = '',
+            newWorkspaceFound = 0,
+            manualWorkspace = '',
             manualDirectoryString = '-- Add manually a directory --';
 
         let config = vscode.workspace.getConfiguration('addFolderToWorkspace');
 
         // Check if workspaces are defined.
-        if (!config.workspaces.length) {
+        if (!config.workspaces.length && !config.recursiveWorkspaces.length) {
             vscode.commands.executeCommand('workbench.action.openSettings', 'addFolderToWorkspace');
             vscode.window.showWarningMessage(`AddFolderToWorkspace: Workspaces - Undefined`, { detail: 'Define at least one workspace (fullpath).\n\nExample: "/Users/workspace/"', modal: true });
             return;
         }
 
-        // Get all first level directories.
-        config.workspaces.forEach(myWorkspace => {
+        // Add all stored workspaces / directories.
+        workspaceDirectories = config.workspaces || [];
+
+        // Get all first level directories from given directories.
+        config.recursiveWorkspaces.forEach(myWorkspace => {
             let workspaceDirectory = fs.readdirSync(myWorkspace, { withFileTypes: true })
                 .filter(dir => dir.isDirectory())
                 .map(dir => myWorkspace + dir.name);
@@ -76,7 +79,7 @@ function initAddFolderToWorkspace(context) {
                 placeHolder: 'AddFolderToWorkspace: Add manually a directory...',
             });
 
-            if (manualWorkspace){
+            if (manualWorkspace) {
                 workspaces.push(manualWorkspace);
             }
         }
@@ -91,16 +94,16 @@ function initAddFolderToWorkspace(context) {
 
             if (!URI) return;
 
-            if (vscode.workspace.workspaceFolders){
+            if (vscode.workspace.workspaceFolders) {
                 vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
 
-                    if (URI.path == workspaceFolder.uri.path){
+                    if (URI.path == workspaceFolder.uri.path) {
                         URIexists = 1;
                     }
                 })
             }
 
-            if (!URIexists){
+            if (!URIexists) {
                 workspaceURIs.push({ uri: URI });
             }
         }
@@ -108,15 +111,15 @@ function initAddFolderToWorkspace(context) {
         if (!workspaceURIs.length) return;
 
         if (newWorkspaceFound) {
-            let addNewWorkspaceToConfig = await vscode.window.showQuickPick(['yes','no'], {
+            let addNewWorkspaceToConfig = await vscode.window.showQuickPick(['yes', 'no'], {
                 title: 'AddFolderToWorkspace (New Workspace)',
                 placeHolder: 'AddFolderToWorkspace: Should I save the new workspace in the settings?',
                 canPickMany: false,
             });
 
-            if (addNewWorkspaceToConfig == 'yes'){
+            if (addNewWorkspaceToConfig == 'yes') {
 
-                if (!manualWorkspace.endsWith("/")){
+                if (!manualWorkspace.endsWith("/")) {
                     manualWorkspace += '/';
                 }
                 let configWorkspaces = config.workspaces;
@@ -161,7 +164,7 @@ function initRemoveFolderFromWorkspace(context) {
             // workspaceFolders.push(workspaceFolder.name)
             let removeWorkspace = workspaces.includes(workspaceFolder.name);
 
-            if (removeWorkspace){
+            if (removeWorkspace) {
                 removeIndexes.push(workspaceFolder.index)
             }
         })

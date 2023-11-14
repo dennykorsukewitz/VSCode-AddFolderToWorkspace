@@ -2,12 +2,16 @@
 
 All notable changes to the "AddFolderToWorkspace" extension will be documented in this file.
 
-## [1.1.2]
+## [1.2.1]
 
 ### Maintenance
 
 - Added additional check if vscode.workspace.workspaceFolders exists.
 - Saves the new manually entered directory globally.
+
+### Recursive Workspaces (only first level)
+
+- Added new setting `addFolderToWorkspace.recursiveWorkspaces` to use recursive Workspaces (only first level).
 
 ## [1.1.1]
 
