@@ -1,12 +1,9 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
-const vscode = require('vscode');
-const fs = require('fs');
+import * as vscode from 'vscode';
 
 /**
  * @param {vscode.ExtensionContext} context
  */
-function activate(context) {
+export function activate(context: vscode.ExtensionContext) {
 
     // Use the console to output diagnostic information (console.log) and errors (console.error)
     // This line of code will only be executed once when your extension is activated
@@ -19,15 +16,15 @@ function activate(context) {
     initRemoveFolderFromWorkspace(context);
 }
 
-function initAddFolderToWorkspace(context) {
+function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
 
     const addFolderToWorkspaceId = 'addFolderToWorkspace';
     context.subscriptions.push(vscode.commands.registerCommand(addFolderToWorkspaceId, async () => {
 
-        let workspaceDirectories = [],
-            newWorkspaceFound = 0,
-            manualWorkspace = '',
-            manualDirectoryString = '-- Add manually a directory --';
+        let workspaceDirectories: string[] = [],
+            newWorkspaceFound : Boolean = false,
+            manualWorkspace : string | undefined = '',
+            manualDirectoryString : string = '-- Add manually a directory --';
 
         let config = vscode.workspace.getConfiguration('addFolderToWorkspace');
 
@@ -38,17 +35,8 @@ function initAddFolderToWorkspace(context) {
             return;
         }
 
-        // Add all stored workspaces / directories.
-        workspaceDirectories = config.workspaces || [];
-
-        // Get all first level directories from given directories.
-        config.recursiveWorkspaces.forEach(myWorkspace => {
-            let workspaceDirectory = fs.readdirSync(myWorkspace, { withFileTypes: true })
-                .filter(dir => dir.isDirectory())
-                .map(dir => myWorkspace + dir.name);
-
-            workspaceDirectories = workspaceDirectories.concat(workspaceDirectory);
-        })
+        // Get all stored directories and recursive directories.
+        workspaceDirectories = await getWorkspaceDirectories();
 
         // Check if directories are defined.
         if (!workspaceDirectories.length) {
@@ -66,13 +54,13 @@ function initAddFolderToWorkspace(context) {
             title: 'AddFolderToWorkspace',
             placeHolder: 'AddFolderToWorkspace: Select a folder...',
             canPickMany: true,
-        })
-        if (!workspaces) return;
+        });
+        if (!workspaces) {return;}
 
         if (workspaces.length && workspaces.includes(manualDirectoryString)) {
 
-            workspaces.shift(manualDirectoryString);
-            newWorkspaceFound = 1;
+            workspaces.shift();
+            newWorkspaceFound = true;
 
             manualWorkspace = await vscode.window.showInputBox({
                 title: 'AddFolderToWorkspace',
@@ -83,7 +71,7 @@ function initAddFolderToWorkspace(context) {
                 workspaces.push(manualWorkspace);
             }
         }
-        if (!workspaces) return;
+        if (!workspaces) {return;}
 
         let workspaceURIs = [];
         for await (const workspace of workspaces) {
@@ -92,15 +80,15 @@ function initAddFolderToWorkspace(context) {
             let URI = vscode.Uri.file(workspace),
                 URIexists = 0;
 
-            if (!URI) return;
+            if (!URI) {return;}
 
             if (vscode.workspace.workspaceFolders) {
-                vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
+                Array.from(vscode.workspace.workspaceFolders).sort().forEach(function (workspaceFolder: vscode.WorkspaceFolder) {
 
-                    if (URI.path == workspaceFolder.uri.path) {
+                    if (URI.path === workspaceFolder.uri.path) {
                         URIexists = 1;
                     }
-                })
+                });
             }
 
             if (!URIexists) {
@@ -108,7 +96,7 @@ function initAddFolderToWorkspace(context) {
             }
         }
 
-        if (!workspaceURIs.length) return;
+        if (!workspaceURIs.length) {return;}
 
         if (newWorkspaceFound) {
             let addNewWorkspaceToConfig = await vscode.window.showQuickPick(['yes', 'no'], {
@@ -117,9 +105,9 @@ function initAddFolderToWorkspace(context) {
                 canPickMany: false,
             });
 
-            if (addNewWorkspaceToConfig == 'yes') {
+            if (addNewWorkspaceToConfig === 'yes') {
 
-                if (!manualWorkspace.endsWith("/")) {
+                if (manualWorkspace && !manualWorkspace.endsWith("/")) {
                     manualWorkspace += '/';
                 }
                 let configWorkspaces = config.workspaces;
@@ -129,24 +117,35 @@ function initAddFolderToWorkspace(context) {
             }
         }
 
-        // Add selected Folder to Workspace.
-        await updateWorkspaceAndWait(0, null, workspaceURIs);
+        // If position is 'Top', the new folder will be added at the beginning of the current workspace.
+        // If position is 'Bottom', the new folder will be added at the end of the current workspace.
+        let position = 0;
+        if (config.position === 'Bottom'){
+            position = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0;
+        }
 
-    }))
+        // Add selected Folder to Workspace.
+        await updateWorkspaceAndWait(position, 0, workspaceURIs);
+
+    }));
 }
 
-function initRemoveFolderFromWorkspace(context) {
+function initRemoveFolderFromWorkspace(context: vscode.ExtensionContext) {
 
     const removeFolderFromWorkspaceId = 'removeFolderFromWorkspace';
     context.subscriptions.push(vscode.commands.registerCommand(removeFolderFromWorkspaceId, async () => {
 
         // Check all current workspace folders.
-        let workspaceFolders = [];
-        vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
-            workspaceFolders.push(workspaceFolder.name)
-        })
+        let workspaceFolders: string[] = [];
 
-        if (!workspaceFolders.length) return;
+        let existingWorkspaceFolders = vscode.workspace.workspaceFolders;
+        if (!existingWorkspaceFolders) { return; }
+
+        Array.from(existingWorkspaceFolders).sort().forEach(function (workspaceFolder: vscode.WorkspaceFolder) {
+            workspaceFolders.push(workspaceFolder.name);
+        });
+
+        if (!workspaceFolders.length) {return;}
 
         // Create showQuickPick 'RemoveFolderFromWorkspace' selection.
         let workspaces = await vscode.window.showQuickPick(workspaceFolders, {
@@ -155,51 +154,75 @@ function initRemoveFolderFromWorkspace(context) {
             canPickMany: true,
         });
 
-        if (!workspaces) return;
+        if (!workspaces) {return;}
 
-        let removeIndexes = [];
+        let removeIndexes: number[] = [];
 
         // Sort and reverse selected 'remove' Folder from Workspace.
-        vscode.workspace.workspaceFolders.sort().forEach(function (workspaceFolder) {
+        existingWorkspaceFolders = vscode.workspace.workspaceFolders;
+        if (!existingWorkspaceFolders) { return; }
+
+        Array.from(existingWorkspaceFolders).sort().forEach(function (workspaceFolder: vscode.WorkspaceFolder) {
             // workspaceFolders.push(workspaceFolder.name)
-            let removeWorkspace = workspaces.includes(workspaceFolder.name);
+            let removeWorkspace = workspaces?.includes(workspaceFolder.name);
 
             if (removeWorkspace) {
-                removeIndexes.push(workspaceFolder.index)
+                removeIndexes.push(workspaceFolder.index);
             }
-        })
+        });
 
         // Remove selected Folder from Workspace.
         for await (const removeIndex of removeIndexes.reverse()) {
             await updateWorkspaceAndWait(removeIndex, 1, []);
         }
-    }))
+    }));
 }
 
-function updateWorkspaceAndWait(start, deleteCount, workspaceFoldersToAdd) {
-    const success = vscode.workspace.updateWorkspaceFolders(start, deleteCount, ...workspaceFoldersToAdd)
+function updateWorkspaceAndWait(start: number, deleteCount: number, workspaceFoldersToAdd: any[]) {
+    const success = vscode.workspace.updateWorkspaceFolders(start, deleteCount, ...workspaceFoldersToAdd);
 
     if (success) {
-        const disps = []
-        return new Promise(resolve => {
+        const disposable: vscode.Disposable[] = [];
+        return new Promise<void>(resolve => {
 
             // Note: it is not valid to call updateWorkspaceFolders() multiple times
             // without waiting for the onDidChangeWorkspaceFolders() to fire.
             // So we have to always wait in case we want to add or remove multiple folders.
             vscode.workspace.onDidChangeWorkspaceFolders(() => {
                 resolve();
-            }, null, disps);
+            }, null, disposable);
 
-        }).finally(() => disps.forEach(disp => disp.dispose()));
+        }).finally(() => disposable.forEach(disp => disp.dispose()));
     } else {
-        return Promise.reject(new Error("Failed to update workspace"))
+        return Promise.reject(new Error("Failed to update workspace"));
     }
 }
 
-// This method is called when your extension is deactivated.
-function deactivate() { }
+async function getWorkspaceDirectories() {
 
-module.exports = {
-    activate,
-    deactivate
+    let config = vscode.workspace.getConfiguration('addFolderToWorkspace');
+
+    let workspaceDirectories = config.workspaces || [];
+    let workspaceDirectory: string[] = [];
+
+    // Get all first level directories from given directories.
+    let workspaceDirectoriesPromises = config.recursiveWorkspaces.map(async (myWorkspace: string) => {
+        let workspaceDirectory: string[] = [];
+        const workspaceDir = await vscode.workspace.fs.readDirectory(vscode.Uri.file(myWorkspace));
+
+        workspaceDir.forEach((dir) => {
+            if (dir[1] === vscode.FileType.Directory) {
+                workspaceDirectory.push(vscode.Uri.joinPath(vscode.Uri.file(myWorkspace), dir[0]).fsPath);
+            }
+        });
+        return workspaceDirectory;
+    });
+
+    let recursiveWorkspaceDirectories = (await Promise.all(workspaceDirectoriesPromises)).flat();
+    workspaceDirectories = workspaceDirectories.concat(recursiveWorkspaceDirectories);
+
+    return workspaceDirectories;
 }
+
+// This method is called when your extension is deactivated.
+export function deactivate() { }

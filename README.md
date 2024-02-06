@@ -19,7 +19,7 @@
 
 | Status |
  | ------ |
-| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/1.2.1/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/1.2.1...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
+| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/2.0.0/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/2.0.0...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
 
 ## Feature
 
@@ -47,6 +47,7 @@ This Function provides a searchable list of folders (Workspaces) that can be rem
 
 | Name | Description | Default Value |
 | - | - | - |
+| addFolderToWorkspace.position | If position is 'Top', the new folder will be added at the beginning of the current workspace. If position is 'Bottom', the new folder will be added at the end of the current workspace. | Bottom |
 | addFolderToWorkspace.workspaces | Provides a list of folders (Workspaces) that can be added to the current VSC Workspace. | /Users/ |
 | addFolderToWorkspace.recursiveWorkspaces | Provides a searchable (only first level) list of folders  (Workspaces) that can be added to the current VSC Workspace. | /Users/ |
 

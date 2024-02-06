@@ -2,7 +2,7 @@
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
   "description": "This extension adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).",
-  "version": "1.2.1",
+  "version": "2.0.0",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -23,39 +23,49 @@
     "add",
     "folder",
     "workflow",
-    "workspace"
+    "workspace",
+    "helper"
   ],
   "categories": [
     "Other"
   ],
   "engines": {
-    "vscode": "^1.74.0"
+    "vscode": "^1.85.0"
   },
-  "activationEvents": [
-    "onCommand:addFolderToWorkspace",
-    "onCommand:removeFolderFromWorkspace"
-  ],
-  "main": "./src/extension",
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "browser": "./dist/extension.js",
   "scripts": {
-    "lint": "eslint .",
-    "lint-fix": "eslint . --fix",
-    "test": "node ./test/runTest.js"
+    "vscode:prepublish": "npm run esbuild-base -- --minify",
+    "esbuild-base": "esbuild ./src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "esbuild": "npm run esbuild-base -- --sourcemap",
+    "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
+    "watch": "tsc -watch -p ./",
+    "compile": "tsc -p ./",
+    "compile-web": "npm run esbuild-base -- --sourcemap",
+    "lint": "eslint src --ext ts",
+    "lint-fix": "eslint src --ext ts --fix",
+    "pretest": "rm -Rf .vscode-test && npm run compile && npm run lint",
+    "test": "node ./dist/test/runTest.js",
+    "open-in-browser": "npm run compile-web && npx @vscode/test-web --extensionDevelopmentPath=."
   },
   "devDependencies": {
+    "@types/glob": "^8.1.0",
     "@types/mocha": "^10.0.1",
-    "@types/node": "16.x",
-    "@types/vscode": "^1.74.0",
-    "@vscode/test-electron": "^2.2.0",
-    "eslint": "^8.28.0",
-    "mocha": "^10.1.0",
-    "typescript": "^4.9.3"
+    "@types/node": "^18.19.14",
+    "@types/vscode": "^1.85.0",
+    "@typescript-eslint/eslint-plugin": "^6.15.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "@vscode/test-electron": "^2.3.9",
+    "esbuild": "^0.20.0",
+    "eslint": "^8.56.0",
+    "mocha": "^10.2.0",
+    "typescript": "^5.3.3",
+    "vscode-test": "^1.6.1"
   },
-  "dependencies": {
-    "glob": "^8.1.0",
-    "path": "^0.12.7"
-  },
-  "vsce": {
-    "dependencies": true
+  "overrides": {
+    "minimatch": "5.1.2",
+    "glob": "8.1.0"
   },
   "contributes": {
     "commands": [
@@ -88,6 +98,19 @@
       "type": "object",
       "title": "Add Folder To Workspace",
       "properties": {
+        "addFolderToWorkspace.position": {
+          "type": "string",
+          "description": "",
+          "default": "Bottom",
+          "enum": [
+            "Top",
+            "Bottom"
+          ],
+          "enumDescriptions": [
+            "If position is 'Top', the new folder will be added at the beginning of the current workspace.",
+            "If position is 'Bottom', the new folder will be added at the end of the current workspace."
+          ]
+        },
         "addFolderToWorkspace.workspaces": {
           "type": "array",
           "items": {
