@@ -41,13 +41,13 @@
     "esbuild": "npm run esbuild-base -- --sourcemap",
     "esbuild-watch": "npm run esbuild-base -- --sourcemap --watch",
     "watch": "tsc -watch -p ./",
-    "compile": "tsc -p ./",
-    "compile-web": "npm run esbuild-base -- --sourcemap",
+    "build": "tsc -p ./",
+    "build-web": "npm run esbuild-base -- --sourcemap",
     "lint": "eslint src --ext ts",
     "lint-fix": "eslint src --ext ts --fix",
-    "pretest": "rm -Rf .vscode-test && npm run compile && npm run lint",
+    "pretest": "rm -Rf .vscode-test && npm run build && npm run lint",
     "test": "node ./dist/test/runTest.js",
-    "open-in-browser": "npm run compile-web && npx @vscode/test-web --extensionDevelopmentPath=."
+    "open-in-browser": "npm run build-web && npx @vscode/test-web --extensionDevelopmentPath=."
   },
   "devDependencies": {
     "@types/glob": "^8.1.0",
