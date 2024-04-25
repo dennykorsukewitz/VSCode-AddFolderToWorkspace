@@ -1,8 +1,7 @@
-# [2.0.0]
+# [2.0.1] - 2024-04-25
 
-## Refactoring
+## Changed
 
-- Changed source language to TypeScript.
-- Added esbuild to get Browser Editor support.
-- Refactored code.
-- Added addFolderToWorkspace.position: If position is 'Top', the new folder will be added at the beginning of the current workspace. If position is 'Bottom', the new folder will be added at the end of the current workspace.
+- Changed to reusable.release.vscode.yml.
+- Keep a changelog.
+- Updated icon.
