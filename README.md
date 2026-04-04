@@ -65,7 +65,7 @@ Clears every entry from the global recent-folder history (the same list used by 
 | addFolderToWorkspace.position            | If position is 'Top', the new folder will be added at the beginning of the current workspace. If position is 'Bottom', the new folder will be added at the end of the current workspace. | Bottom        |
 | addFolderToWorkspace.workspaces          | Provides a list of folders (Workspaces) that can be added to the current VSC Workspace.                                                                                                  | /Users/       |
 | addFolderToWorkspace.recursiveWorkspaces | Provides a searchable (only first level) list of folders  (Workspaces) that can be added to the current VSC Workspace.                                                                   | /Users/       |
-| addFolderToWorkspace.recentFoldersCount  | How many recently added folders to pin at the top of the **Add Folder to Workspace** quick pick. Set to `0` to hide that section and stop persisting recent paths.                        | 5             |
+| addFolderToWorkspace.recentFoldersCount  | How many recently added folders to pin at the top of the **Add Folder to Workspace** quick pick. Set to `0` to hide that section and stop persisting recent paths.                       | 5             |
 
 ![Settings](doc/images/settings.png)
 
