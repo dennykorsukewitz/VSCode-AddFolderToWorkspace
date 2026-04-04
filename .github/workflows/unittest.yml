@@ -7,5 +7,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  Test:
+  UnitTest:
     uses: dennykorsukewitz/dennykorsukewitz/.github/workflows/reusable.unittest.vscode.yml@dev
