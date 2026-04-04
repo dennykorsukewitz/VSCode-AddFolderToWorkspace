@@ -43,8 +43,8 @@
     "watch": "tsc -watch -p ./",
     "build": "tsc -p ./",
     "build-web": "npm run esbuild-base -- --sourcemap",
-    "lint": "eslint src --ext ts",
-    "lint-fix": "eslint src --ext ts --fix",
+    "lint": "eslint src",
+    "lint-fix": "eslint src --fix",
     "pretest": "rm -Rf .vscode-test && npm run build && npm run lint",
     "test": "node ./dist/test/runTest.js",
     "open-in-browser": "npm run build-web && npx @vscode/test-web --extensionDevelopmentPath=."
@@ -59,9 +59,9 @@
     "@vscode/test-electron": "^2.3.9",
     "esbuild": "^0.20.0",
     "eslint": "^9.23.0",
+    "eslint-plugin-n": "^17.15.1",
     "mocha": "^11.1.0",
-    "typescript": "^5.3.3",
-    "vscode-test": "^1.6.1"
+    "typescript": "^5.3.3"
   },
   "overrides": {
     "minimatch": "5.1.2",
