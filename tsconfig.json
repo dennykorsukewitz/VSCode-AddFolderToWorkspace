@@ -8,11 +8,15 @@
         ],
         "sourceMap": true,
         "rootDir": "src",
-        "strict": true
+        "strict": true,
+        "esModuleInterop": true
     },
     "include": [
-        "**/*.ts",
-        "src/*.ts",
         "src/**/*.ts"
+    ],
+    "exclude": [
+        "node_modules",
+        "dist",
+        ".vscode-test"
     ]
 }
