@@ -1,4 +1,4 @@
-<img align="right" width="150" height="150" src="doc/images/icon.png">
+<img align="right" width="150" height="150" src="doc/images/icon.png" alt="Add Folder To Workspace extension icon">
 
 # AddFolderToWorkspace
 
@@ -10,7 +10,7 @@
     But then you have to click through all the folders again and again.
 ```
 
-AddFolderToWorkspace is a VSCode extension that streamlines the process of adding and removing folders to and from your projects. It provides a set of commands and context menu options to manage your project's folder structure directly from the editor.
+AddFolderToWorkspace is a Visual Studio Code extension that streamlines the process of adding and removing folders to and from your projects. It provides a set of commands and context menu options to manage your project's folder structure directly from the editor.
 
 | Repository                                                                                                                                     | GitHub                                                                                                                                                                                                                                                              | Visual Studio Marketplace                                                                                                                                                                                                                                                      |
 | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -75,7 +75,7 @@ Download latest [vsix file](https://github.com/dennykorsukewitz/VSCode-AddFolder
 
 ### 3. Source code
 
-Download archive with the latest [release](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/releases) and unpack it to VisualStudioCode extensions folder
+Download archive with the latest [release](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/releases) and unpack it to Visual Studio Code extensions folder
 `$HOME/.vscode/extensions/`.
 
 ---
