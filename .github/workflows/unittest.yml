@@ -1,0 +1,11 @@
+---
+name: UnitTest
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  Test:
+    uses: dennykorsukewitz/dennykorsukewitz/.github/workflows/reusable.unittest.vscode.yml@dev
