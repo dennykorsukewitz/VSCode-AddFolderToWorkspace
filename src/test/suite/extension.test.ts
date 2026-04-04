@@ -33,6 +33,14 @@ suite('AddFolderToWorkspace extension', () => {
             commands.includes('removeFolderFromWorkspace'),
             'removeFolderFromWorkspace should be registered',
         );
+        assert.ok(
+            commands.includes('addRecentFoldersToWorkspace'),
+            'addRecentFoldersToWorkspace should be registered',
+        );
+        assert.ok(
+            commands.includes('clearRecentFoldersToWorkspace'),
+            'clearRecentFoldersToWorkspace should be registered',
+        );
     });
 
     test('addFolderToWorkspace configuration is readable', async () => {
@@ -51,5 +59,11 @@ suite('AddFolderToWorkspace extension', () => {
 
         const recursive = cfg.get<string[]>('recursiveWorkspaces');
         assert.ok(Array.isArray(recursive), 'recursiveWorkspaces should be an array');
+
+        const recentFoldersCount = cfg.get<number>('recentFoldersCount');
+        assert.ok(
+            typeof recentFoldersCount === 'number' && recentFoldersCount >= 0,
+            'recentFoldersCount should be a non-negative number',
+        );
     });
 });

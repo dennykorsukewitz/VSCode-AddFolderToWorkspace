@@ -21,7 +21,7 @@ AddFolderToWorkspace is a Visual Studio Code extension that streamlines the proc
 
 | Status                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/2.0.1/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/2.0.1...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
+| [![GitHub commits since tagged version](https://img.shields.io/github/commits-since/dennykorsukewitz/VSCode-AddFolderToWorkspace/2.1.0/dev)](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/compare/2.1.0...dev) ![GitHub Workflow Lint](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/lint.yml/badge.svg?branch=dev&style=flat&label=Lint) ![GitHub Workflow Pages](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/actions/workflows/pages.yml/badge.svg?branch=dev&style=flat&label=GitHub%20Pages) |
 
 ## Feature
 
@@ -43,6 +43,19 @@ This Function provides a searchable list of folders (Workspaces) that can be rem
 
 ![RemoveFolderFromWorkspace](doc/images/removefolderfromworkspace.gif)
 
+### Add Recent Folders to Workspace
+
+Opens a quick pick of **globally saved recent folder paths** (built from folders you previously added successfully with this extension). You can add one or many without going through the full configured-folder list. Does **not** require `workspaces` / `recursiveWorkspaces` to be set.
+
+**Shortcut:** ```ctrl + alt + k, r``` (```cmd + alt + k, r``` on macOS where the keybinding resolves similarly)<br>
+**Command:** ```AddFolderToWorkspace: Add Recent Folders to Workspace.```
+
+### Clear Recent Folders List
+
+Clears every entry from the global recent-folder history (the same list used by **Add Recent Folders** and the pinned section of **Add Folder to Workspace**).
+
+**Command:** ```AddFolderToWorkspace: Clear Recent Folders List.``` (no default keybinding; assign one in Keyboard Shortcuts if you like.)
+
 ### Settings
 
 `Preferences -> Settings -> Extensions -> AddFolderToWorkspace`
@@ -52,6 +65,7 @@ This Function provides a searchable list of folders (Workspaces) that can be rem
 | addFolderToWorkspace.position            | If position is 'Top', the new folder will be added at the beginning of the current workspace. If position is 'Bottom', the new folder will be added at the end of the current workspace. | Bottom        |
 | addFolderToWorkspace.workspaces          | Provides a list of folders (Workspaces) that can be added to the current VSC Workspace.                                                                                                  | /Users/       |
 | addFolderToWorkspace.recursiveWorkspaces | Provides a searchable (only first level) list of folders  (Workspaces) that can be added to the current VSC Workspace.                                                                   | /Users/       |
+| addFolderToWorkspace.recentFoldersCount  | How many recently added folders to pin at the top of the **Add Folder to Workspace** quick pick. Set to `0` to hide that section and stop persisting recent paths.                        | 5             |
 
 ![Settings](doc/images/settings.png)
 

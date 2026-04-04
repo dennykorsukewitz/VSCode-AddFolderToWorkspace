@@ -1,5 +1,7 @@
 import * as vscode from 'vscode';
 
+const RECENT_PATHS_STORAGE_KEY = 'addFolderToWorkspace.recentPaths';
+
 /**
  * @param {vscode.ExtensionContext} context
  */
@@ -11,6 +13,12 @@ export function activate(context: vscode.ExtensionContext) {
 
     // This function add the selected folder to workspace (VSC Workspace).
     initAddFolderToWorkspace(context);
+
+    // Pick from globally stored recent folders only (no workspace config required).
+    initAddRecentFoldersToWorkspace(context);
+
+    // Clear global recent folder paths (globalState).
+    initClearRecentFoldersPaths(context);
 
     // This function removes the selected folder from workspace (VSC Workspace).
     initRemoveFolderFromWorkspace(context);
@@ -27,6 +35,7 @@ function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
         const manualDirectoryString = '-- Add manually a directory --';
 
         const config = vscode.workspace.getConfiguration('addFolderToWorkspace');
+        const recentFoldersCount = config.get<number>('recentFoldersCount', 5);
 
         // Check if workspaces are defined.
         if (!config.workspaces.length && !config.recursiveWorkspaces.length) {
@@ -45,9 +54,13 @@ function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
             return;
         }
 
-        if (workspaceDirectories.length && !workspaceDirectories.includes(manualDirectoryString)) {
-            workspaceDirectories.unshift(manualDirectoryString);
-        }
+        const storedRecent = context.globalState.get<string[]>(RECENT_PATHS_STORAGE_KEY) ?? [];
+        workspaceDirectories = orderDirectoriesForQuickPick(
+            workspaceDirectories,
+            storedRecent,
+            manualDirectoryString,
+            recentFoldersCount,
+        );
 
         // Open QuickPick and add selected Folder (Directory to VSC Workspace).
         const workspaces = await vscode.window.showQuickPick(workspaceDirectories, {
@@ -59,8 +72,11 @@ function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
 
         if (workspaces.length && workspaces.includes(manualDirectoryString)) {
 
-            workspaces.shift();
             newWorkspaceFound = true;
+            const manualIndex = workspaces.indexOf(manualDirectoryString);
+            if (manualIndex >= 0) {
+                workspaces.splice(manualIndex, 1);
+            }
 
             manualWorkspace = await vscode.window.showInputBox({
                 title: 'AddFolderToWorkspace',
@@ -73,26 +89,7 @@ function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
         }
         if (!workspaces) {return;}
 
-        const workspaceURIs: { uri: vscode.Uri }[] = [];
-        for await (const workspace of workspaces) {
-
-            // Get URI of selected directory.
-            const folderUri = vscode.Uri.file(workspace);
-            let URIexists = 0;
-
-            if (vscode.workspace.workspaceFolders) {
-                Array.from(vscode.workspace.workspaceFolders).sort().forEach(function (workspaceFolder: vscode.WorkspaceFolder) {
-
-                    if (folderUri.path === workspaceFolder.uri.path) {
-                        URIexists = 1;
-                    }
-                });
-            }
-
-            if (!URIexists) {
-                workspaceURIs.push({ uri: folderUri });
-            }
-        }
+        const workspaceURIs = getWorkspaceFolderUrisToAdd(workspaces);
 
         if (!workspaceURIs.length) {return;}
 
@@ -123,9 +120,65 @@ function initAddFolderToWorkspace(context: vscode.ExtensionContext) {
         }
 
         // Add selected Folder to Workspace.
-        await updateWorkspaceAndWait(position, 0, workspaceURIs);
+        await addWorkspaceFoldersAndPersistRecents(context, position, workspaceURIs, recentFoldersCount);
 
     }));
+}
+
+function initAddRecentFoldersToWorkspace(context: vscode.ExtensionContext) {
+    context.subscriptions.push(
+        vscode.commands.registerCommand('addRecentFoldersToWorkspace', async () => {
+            const raw = context.globalState.get<string[]>(RECENT_PATHS_STORAGE_KEY) ?? [];
+            const paths = dedupeRecentPathsPreserveOrder(raw);
+            if (!paths.length) {
+                vscode.window.showInformationMessage(
+                    'AddFolderToWorkspace: No recent folders yet. Use "Add Folder to Workspace" first.',
+                );
+                return;
+            }
+
+            const selected = await vscode.window.showQuickPick(paths, {
+                title: 'AddFolderToWorkspace - Recent folders',
+                placeHolder: 'Select one or more recent folders to add...',
+                canPickMany: true,
+            });
+            if (!selected?.length) {
+                return;
+            }
+
+            const workspaceURIs = getWorkspaceFolderUrisToAdd(selected);
+            if (!workspaceURIs.length) {
+                vscode.window.showInformationMessage(
+                    'AddFolderToWorkspace: Selected folders are already in this workspace.',
+                );
+                return;
+            }
+
+            const config = vscode.workspace.getConfiguration('addFolderToWorkspace');
+            const recentFoldersCount = config.get<number>('recentFoldersCount', 5);
+            let position = 0;
+            if (config.position === 'Bottom') {
+                position = vscode.workspace.workspaceFolders ? vscode.workspace.workspaceFolders.length : 0;
+            }
+            await addWorkspaceFoldersAndPersistRecents(context, position, workspaceURIs, recentFoldersCount);
+        }),
+    );
+}
+
+function initClearRecentFoldersPaths(context: vscode.ExtensionContext) {
+    context.subscriptions.push(
+        vscode.commands.registerCommand('clearRecentFoldersToWorkspace', async () => {
+            const existing = context.globalState.get<string[]>(RECENT_PATHS_STORAGE_KEY) ?? [];
+            if (!existing.length) {
+                vscode.window.showInformationMessage(
+                    'AddFolderToWorkspace: Recent folders list is already empty.',
+                );
+                return;
+            }
+            await context.globalState.update(RECENT_PATHS_STORAGE_KEY, undefined);
+            vscode.window.showInformationMessage('AddFolderToWorkspace: Recent folders list cleared.');
+        }),
+    );
 }
 
 function initRemoveFolderFromWorkspace(context: vscode.ExtensionContext) {
@@ -176,6 +229,44 @@ function initRemoveFolderFromWorkspace(context: vscode.ExtensionContext) {
     }));
 }
 
+/**
+ * Single add-folder update: persist recent paths as soon as updateWorkspaceFolders accepts the change,
+ * then wait for the workspace folder event (required before any further updateWorkspaceFolders call).
+ */
+async function addWorkspaceFoldersAndPersistRecents(
+    context: vscode.ExtensionContext,
+    position: number,
+    workspaceURIs: { uri: vscode.Uri }[],
+    recentFoldersCount: number,
+): Promise<void> {
+    const disposable: vscode.Disposable[] = [];
+    let updateAccepted = false;
+    const workspaceChange = new Promise<void>((resolve, reject) => {
+        vscode.workspace.onDidChangeWorkspaceFolders(() => {
+            resolve();
+        }, null, disposable);
+
+        updateAccepted = vscode.workspace.updateWorkspaceFolders(position, 0, ...workspaceURIs);
+        if (!updateAccepted) {
+            reject(new Error('Failed to update workspace'));
+        }
+    });
+
+    try {
+        if (updateAccepted) {
+            await recordRecentAddedFolders(
+                context,
+                RECENT_PATHS_STORAGE_KEY,
+                workspaceURIs.map((entry) => entry.uri),
+                recentFoldersCount,
+            );
+        }
+        await workspaceChange;
+    } finally {
+        disposable.forEach((d) => d.dispose());
+    }
+}
+
 function updateWorkspaceAndWait(start: number, deleteCount: number, workspaceFoldersToAdd: { uri: vscode.Uri; name?: string }[]) {
     const disposable: vscode.Disposable[] = [];
 
@@ -193,6 +284,41 @@ function updateWorkspaceAndWait(start: number, deleteCount: number, workspaceFol
             reject(new Error("Failed to update workspace"));
         }
     }).finally(() => disposable.forEach((disp) => disp.dispose()));
+}
+
+function dedupeRecentPathsPreserveOrder(paths: string[]): string[] {
+    const seen = new Set<string>();
+    const out: string[] = [];
+    for (const p of paths) {
+        const normalized = vscode.Uri.file(p).fsPath;
+        if (seen.has(normalized)) {
+            continue;
+        }
+        seen.add(normalized);
+        out.push(normalized);
+    }
+    return out;
+}
+
+function getWorkspaceFolderUrisToAdd(selectedPaths: string[]): { uri: vscode.Uri }[] {
+    const workspaceURIs: { uri: vscode.Uri }[] = [];
+    for (const workspace of selectedPaths) {
+        const folderUri = vscode.Uri.file(workspace);
+        let URIexists = 0;
+
+        if (vscode.workspace.workspaceFolders) {
+            Array.from(vscode.workspace.workspaceFolders).sort().forEach(function (workspaceFolder: vscode.WorkspaceFolder) {
+                if (folderUri.path === workspaceFolder.uri.path) {
+                    URIexists = 1;
+                }
+            });
+        }
+
+        if (!URIexists) {
+            workspaceURIs.push({ uri: folderUri });
+        }
+    }
+    return workspaceURIs;
 }
 
 async function getWorkspaceDirectories() {
@@ -218,6 +344,55 @@ async function getWorkspaceDirectories() {
     workspaceDirectories = workspaceDirectories.concat(recursiveWorkspaceDirectories);
 
     return workspaceDirectories;
+}
+
+function orderDirectoriesForQuickPick(
+    baseDirectories: string[],
+    storedRecentPaths: string[],
+    manualLabel: string,
+    recentLimit: number,
+): string[] {
+    const recentSegment: string[] = [];
+    if (recentLimit > 0 && storedRecentPaths.length) {
+        const seen = new Set<string>();
+        for (const p of storedRecentPaths) {
+            const normalized = vscode.Uri.file(p).fsPath;
+            if (seen.has(normalized)) {
+                continue;
+            }
+            seen.add(normalized);
+            recentSegment.push(normalized);
+            if (recentSegment.length >= recentLimit) {
+                break;
+            }
+        }
+    }
+
+    const recentSet = new Set(recentSegment.map((p) => vscode.Uri.file(p).fsPath));
+    const rest = baseDirectories.filter((p) => !recentSet.has(vscode.Uri.file(p).fsPath));
+
+    return [...recentSegment, manualLabel, ...rest];
+}
+
+async function recordRecentAddedFolders(
+    context: vscode.ExtensionContext,
+    storageKey: string,
+    addedUris: vscode.Uri[],
+    limit: number,
+): Promise<void> {
+    if (limit <= 0 || !addedUris.length) {
+        return;
+    }
+
+    let next = context.globalState.get<string[]>(storageKey) ?? [];
+    for (let i = addedUris.length - 1; i >= 0; i--) {
+        const normalized = addedUris[i].fsPath;
+        next = next.filter((p) => vscode.Uri.file(p).fsPath !== normalized);
+        next.unshift(normalized);
+    }
+
+    next = next.slice(0, limit);
+    await context.globalState.update(storageKey, next);
 }
 
 // This method is called when your extension is deactivated.

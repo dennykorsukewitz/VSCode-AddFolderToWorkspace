@@ -1,8 +1,8 @@
 {
   "name": "AddFolderToWorkspace",
   "displayName": "Add Folder To Workspace",
-  "description": "This extension adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).",
-  "version": "2.0.1",
+  "description": "Adds or removes folders in the workspace (multi-select). Supports a global recent-folders list, quick pick from saved paths, and pins in the add-folder picker.",
+  "version": "2.1.0",
   "publisher": "dennykorsukewitz",
   "icon": "doc/images/icon.png",
   "license": "SEE LICENSE IN LICENSE",
@@ -24,7 +24,8 @@
     "folder",
     "workflow",
     "workspace",
-    "helper"
+    "helper",
+    "recent"
   ],
   "categories": [
     "Other"
@@ -78,12 +79,26 @@
         "command": "removeFolderFromWorkspace",
         "title": "Remove Folder from Workspace.",
         "category": "AddFolderToWorkspace"
+      },
+      {
+        "command": "addRecentFoldersToWorkspace",
+        "title": "Add Recent Folders to Workspace.",
+        "category": "AddFolderToWorkspace"
+      },
+      {
+        "command": "clearRecentFoldersToWorkspace",
+        "title": "Clear Recent Folders List.",
+        "category": "AddFolderToWorkspace"
       }
     ],
     "keybindings": [
       {
         "command": "addFolderToWorkspace",
         "key": "ctrl+alt+k p"
+      },
+      {
+        "command": "addRecentFoldersToWorkspace",
+        "key": "ctrl+alt+k r"
       },
       {
         "command": "removeFolderFromWorkspace",
@@ -130,6 +145,12 @@
           "default": [
             "/Users/"
           ]
+        },
+        "addFolderToWorkspace.recentFoldersCount": {
+          "type": "number",
+          "default": 5,
+          "minimum": 0,
+          "description": "How many recently added folders to pin at the top of the picker. Set to 0 to disable."
         }
       }
     }
