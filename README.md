@@ -78,15 +78,12 @@ To install this extension, you have **three** options:
 
 ### 1. Search Extension in Marketplace
 
-Search and install online extension via VSC extensions menu.
-
-`Code` -> `Preferences` -> `Extensions` simply search for `AddFolderToWorkspace` to install.
+Search and install the extension via the Visual Studio Code extensions view (**View → Extensions** or activity bar).
+Search for **AddFolderToWorkspace** or **Add Folder To Workspace**.
 
 ### 2. Install via vsix file
 
-Download latest [vsix file](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/releases) and install via extensions menu.
-
-`Code` -> `Preferences` -> `Extensions` -> `Views and More Action` -> `Install from VSIX`.
+Download the latest [.vsix from Releases](https://github.com/dennykorsukewitz/VSCode-AddFolderToWorkspace/releases). In Visual Studio Code: **Extensions** view → **···** (Views and More Actions) → **Install from VSIX…**.
 
 ### 3. Source code
 
