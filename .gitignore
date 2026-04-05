@@ -11,3 +11,5 @@ package-lock.json
 .vscode/settings.json
 *.vsix
 TODO.md
+
+eslint.config.mjs
