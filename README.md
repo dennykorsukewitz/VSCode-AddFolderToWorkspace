@@ -1,6 +1,6 @@
-<img align="right" width="150" height="150" src="doc/images/icon.png" alt="Add Folder To Workspace extension icon">
-
 # AddFolderToWorkspace
+
+<img align="right" width="150" height="150" src="doc/images/icon.png" alt="Add Folder To Workspace extension icon">
 
 **AddFolderToWorkspace** is an extension that adds / removes the selected folder (multiple) to / from the workspace (VSC Workspace).
 
