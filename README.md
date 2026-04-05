@@ -6,7 +6,8 @@
 
 ```markdown
     Of course, you can use the already built-in function:
-    `Workspaces: Add Folder To Workspace...` (workbench.action.addRootFolder).
+    `Workspaces: Add Folder To Workspace...`
+    (workbench.action.addRootFolder).
     But then you have to click through all the folders again and again.
 ```
 
