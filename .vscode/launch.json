@@ -14,7 +14,7 @@
             "preLaunchTask": "npm: build"
         },
         {
-            "name": "Run Extension (sandbox)",
+            "name": "Run Sandbox Extension",
             "type": "extensionHost",
             "request": "launch",
             "args": [
