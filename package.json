@@ -62,7 +62,7 @@
     "eslint": "^10.3.0",
     "eslint-plugin-n": "^18.0.1",
     "mocha": "^11.1.0",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   },
   "overrides": {
     "minimatch": "5.1.2",
